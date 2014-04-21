@@ -1,57 +1,37 @@
 var bulk = require('bulk-require');
+var staticModule = require('static-module');
 var path = require('path');
-
+var glob = require('glob');
 var through = require('through2');
-var falafel = require('falafel');
-var interceptPath = require.resolve('./lib/_intercept.js');
 
 module.exports = function (file, opts) {
     if (/\.json$/.test(file)) return through();
     if (!opts) opts = {};
-    var moduleName = opts.moduleName || 'bulk-require';
-    if (file === interceptPath) {
-        var output = through();
-        return output;
-    }
+    var vars = opts.vars || {
+        __filename: file,
+        __dirname: path.dirname(file)
+    };
     
-    var buffers = [];
-    var fsNames = {};
-    var vars = [ '__filename', '__dirname' ];
-    var dirname = path.dirname(file);
+    var sm = staticModule(
+        { 'bulk-require': bulkRequire },
+        { vars: vars }
+    );
+    return sm;
     
-    var tr = through(write, end);
-    return tr;
-    
-    function write (buf, enc, next) {
-        buffers.push(buf);
-        next();
-    }
-    function end () {
-        var data = Buffer.concat(buffers).toString('utf8');
-        try { var output = falafel(data, parse) }
-        catch (err) {
-            this.emit('error', new Error(err.message + ' in file ' + file));
-        }
-        finish(output);
-    }
-    
-    function finish (output) {
-        tr.push(String(output));
-        tr.push(null);
-    }
-    
-    function parse (node) {
-        if (isRequire(node) && node.arguments[0].value === moduleName) {
-            node.update('require(' + JSON.stringify(interceptPath) + ')');
-        }
-    }
-    
-    function isRequire (node) {
-        var c = node.callee;
-        return c
-            && node.type === 'CallExpression'
-            && c.type === 'Identifier'
-            && c.name === 'require'
-        ;
+    function bulkRequire (dir, globs) {
+        var gs = globs.slice();
+        var stream = through();
+        
+        (function next () {
+            if (gs.length === 0) {
+                return stream.push(null);
+            }
+            var g = path.join(dir, gs.shift());
+            glob(g, function (err, files) {
+                console.log('files=', files);
+            });
+        })();
+        
+        return stream;
     }
 };

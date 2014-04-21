@@ -1,8 +1,8 @@
-var bulk = require('bulk-require');
 var staticModule = require('static-module');
 var path = require('path');
 var glob = require('glob');
 var through = require('through2');
+var bulk = require('bulk-require');
 
 module.exports = function (file, opts) {
     if (/\.json$/.test(file)) return through();
@@ -21,17 +21,25 @@ module.exports = function (file, opts) {
     function bulkRequire (dir, globs) {
         var gs = globs.slice();
         var stream = through();
-        
-        (function next () {
-            if (gs.length === 0) {
-                return stream.push(null);
-            }
-            var g = path.join(dir, gs.shift());
-            glob(g, function (err, files) {
-                console.log('files=', files);
-            });
-        })();
-        
+        var res = bulk(dir, globs, {
+            require: function (x) { return x }
+        });
+        stream.push(walk(res));
+        stream.push(null);
         return stream;
     }
 };
+
+function walk (obj) {
+    if (typeof obj === 'string') {
+        return 'require(' + JSON.stringify(obj) + ')';
+    }
+    else if (typeof obj === 'object') {
+        return '{' + Object.keys(obj).map(function (key) {
+            return JSON.stringify(key) + ':' + walk(obj[key]);
+        }).join(',') + '}';
+    }
+    else {
+        throw new Error("I don't even know: " + obj);
+    }
+}

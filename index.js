@@ -38,8 +38,8 @@ function walk (obj) {
         return '(function () {'
             + 'var f = function () {};'
             + Object.keys(obj).map(function (key) {
-                return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key]);
-            }).join(';') + ';'
+                return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key]) + ';';
+            }).join('')
             + 'return f;'
             + '})()'
         ;

@@ -34,7 +34,17 @@ function walk (obj) {
     if (typeof obj === 'string') {
         return 'require(' + JSON.stringify(obj) + ')';
     }
-    else if (typeof obj === 'object') {
+    else if (obj && typeof obj === 'object' && obj.index) {
+        return '(function () {'
+            + 'var f = function () {};'
+            + Object.keys(obj).map(function (key) {
+                return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key]);
+            }).join(';') + ';'
+            + 'return f;'
+            + '})()'
+        ;
+    }
+    else if (obj && typeof obj === 'object') {
         return '{' + Object.keys(obj).map(function (key) {
             return JSON.stringify(key) + ':' + walk(obj[key]);
         }).join(',') + '}';

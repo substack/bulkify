@@ -49,7 +49,5 @@ function walk (obj) {
             return JSON.stringify(key) + ':' + walk(obj[key]);
         }).join(',') + '}';
     }
-    else {
-        throw new Error("I don't even know: " + obj);
-    }
+    else throw new Error('unexpected object in bulk-require result: ' + obj);
 }

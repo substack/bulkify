@@ -36,7 +36,7 @@ function walk (obj) {
     }
     else if (obj && typeof obj === 'object' && obj.index) {
         return '(function () {'
-            + 'var f = function () {};'
+            + 'var f = ' + walk(obj.index) + ';'
             + Object.keys(obj).map(function (key) {
                 return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key]) + ';';
             }).join('')

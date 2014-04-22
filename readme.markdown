@@ -1,7 +1,7 @@
 # bulkify
 
-transform browser code to [bulk require](https://npmjs.org/package/bulk-require)
-nested javascript files from directory trees
+transform inline [bulk-require](https://npmjs.org/package/bulk-require)
+calls into statically resolvable require maps
 
 The bulkify function signature is compatible with
 [browserify](http://browserify.org)'s transform API.

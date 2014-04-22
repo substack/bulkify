@@ -3,6 +3,8 @@
 transform inline [bulk-require](https://npmjs.org/package/bulk-require)
 calls into statically resolvable require maps
 
+[![build status](https://secure.travis-ci.org/substack/bulkify.png)](http://travis-ci.org/substack/bulkify)
+
 The bulkify function signature is compatible with
 [browserify](http://browserify.org)'s transform API.
 

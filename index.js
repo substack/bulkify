@@ -1,6 +1,5 @@
 var staticModule = require('static-module');
 var path = require('path');
-var glob = require('glob');
 var through = require('through2');
 var bulk = require('bulk-require');
 
@@ -19,7 +18,6 @@ module.exports = function (file, opts) {
     return sm;
     
     function bulkRequire (dir, globs) {
-        var gs = globs.slice();
         var stream = through();
         var res = bulk(dir, globs, {
             require: function (x) { return x }

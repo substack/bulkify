@@ -1,31 +1,31 @@
 var test = require('tape');
 var path = require('path');
 var bulk = require('../');
+var bulkRequire = require('bulk-require');
 var vm = require('vm');
 var concat = require('concat-stream');
 
+var dir = path.join(__dirname + '/glob');
+var args = [ 'data/**/*.js', 'render/*.js' ];
+var expected = bulkRequire(dir, args);
+
 test('glob', function (t) {
-    t.plan(8);
+    t.plan(1);
     
-    var dir = path.join(__dirname + '/glob');
     var b = bulk();
     b.pipe(concat(function (body) {
-        vm.runInNewContext(body, { console: { log: log } });
+        vm.runInNewContext(body, {
+            console: { log: log },
+            require: require
+        });
     }));
     b.write("console.log(require('bulk-require')("
-        + JSON.stringify(dir)
-        + ", [ 'data/**/*.js', 'render/*.js' ]))"
+        + JSON.stringify(dir) + ', ' + JSON.stringify(args)
+        + '))'
     );
     b.end();
     
     function log (sections) {
-        t.deepEqual(Object.keys(sections), [ 'data', 'render' ]);
-        t.deepEqual(Object.keys(sections.data), [ 'cats', 'dogs', 'owners' ]);
-        t.deepEqual(Object.keys(sections.render), [ 'x' ]);
-        t.deepEqual(Object.keys(sections.render.x), [ 'oneoneone', 'twotwotwo' ]);
-        t.equal(sections.data.cats, sections.data.cats.index);
-        t.equal(sections.data.dogs, sections.data.dogs.index);
-        t.equal(typeof sections.data.cats, 'function');
-        t.equal(typeof sections.data.dogs, 'function');
+        t.deepEqual(sections, expected);
     }
 });

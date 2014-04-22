@@ -1,0 +1,36 @@
+{
+  "name": "bulkify",
+  "version": "1.0.0",
+  "description": "transform inline bulk-require calls into statically resolvable require maps",
+  "main": "index.js",
+  "dependencies": {
+    "bulk-require": "~0.2.0",
+    "static-module": "~0.0.6",
+    "through2": "~0.4.1"
+  },
+  "devDependencies": {
+    "concat-stream": "^1.4.5",
+    "tape": "^2.12.1"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/bulkify.git"
+  },
+  "homepage": "https://github.com/substack/bulkify",
+  "keywords": [
+    "browserify-transform",
+    "bulk-require",
+    "directory",
+    "nested",
+    "require"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT"
+}

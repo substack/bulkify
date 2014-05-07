@@ -43,9 +43,9 @@ function walk (obj) {
         ;
     }
     else if (obj && typeof obj === 'object') {
-        return '{' + Object.keys(obj).map(function (key) {
+        return '({' + Object.keys(obj).map(function (key) {
             return JSON.stringify(key) + ':' + walk(obj[key]);
-        }).join(',') + '}';
+        }).join(',') + '})';
     }
     else throw new Error('unexpected object in bulk-require result: ' + obj);
 }

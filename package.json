@@ -1,6 +1,6 @@
 {
   "name": "bulkify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "transform inline bulk-require calls into statically resolvable require maps",
   "main": "index.js",
   "dependencies": {

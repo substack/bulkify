@@ -20,7 +20,7 @@ module.exports = function (file, opts) {
     function bulkRequire (dir, globs) {
         var stream = through();
         var res = bulk(dir, globs, {
-            require: function (x) { return x }
+            require: function (x) { return path.resolve(x); }
         });
         stream.push(walk(res));
         stream.push(null);

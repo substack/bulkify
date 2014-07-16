@@ -22,21 +22,25 @@ module.exports = function (file, opts) {
         var res = bulk(dir, globs, {
             require: function (x) { return path.resolve(x); }
         });
-        stream.push(walk(res));
+        stream.push(walk(res, dir));
         stream.push(null);
         return stream;
     }
 };
 
-function walk (obj) {
+function walk (obj, dir) {
     if (typeof obj === 'string') {
-        return 'require(' + JSON.stringify(obj) + ')';
+        var filePath = path.relative(dir, obj);
+        if (filePath[0] !== '.') {
+          filePath = './' + filePath;
+        }
+        return 'require(' + JSON.stringify(filePath) + ')';
     }
     else if (obj && typeof obj === 'object' && obj.index) {
         return '(function () {'
-            + 'var f = ' + walk(obj.index) + ';'
+            + 'var f = ' + walk(obj.index, dir) + ';'
             + Object.keys(obj).map(function (key) {
-                return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key]) + ';';
+                return 'f[' + JSON.stringify(key) + ']=' + walk(obj[key], dir) + ';';
             }).join('')
             + 'return f;'
             + '})()'
@@ -44,7 +48,7 @@ function walk (obj) {
     }
     else if (obj && typeof obj === 'object') {
         return '({' + Object.keys(obj).map(function (key) {
-            return JSON.stringify(key) + ':' + walk(obj[key]);
+            return JSON.stringify(key) + ':' + walk(obj[key], dir);
         }).join(',') + '})';
     }
     else throw new Error('unexpected object in bulk-require result: ' + obj);

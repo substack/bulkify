@@ -1,6 +1,7 @@
 var test = require('tape');
 var path = require('path');
 var bulk = require('../');
+var testRequire = require("./require");
 var bulkRequire = require('bulk-require');
 var vm = require('vm');
 var concat = require('concat-stream');
@@ -16,7 +17,7 @@ test('glob', function (t) {
     b.pipe(concat(function (body) {
         vm.runInNewContext(body, {
             console: { log: log },
-            require: require
+            require: testRequire(dir)
         });
     }));
     b.write("console.log(require('bulk-require')("

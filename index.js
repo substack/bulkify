@@ -6,9 +6,10 @@ var bulk = require('bulk-require');
 module.exports = function (file, opts) {
     if (/\.json$/.test(file)) return through();
     if (!opts) opts = {};
+    var filedir = path.dirname(file);
     var vars = opts.vars || {
         __filename: file,
-        __dirname: path.dirname(file)
+        __dirname: filedir
     };
     
     var sm = staticModule(
@@ -20,7 +21,11 @@ module.exports = function (file, opts) {
     function bulkRequire (dir, globs) {
         var stream = through();
         var res = bulk(dir, globs, {
-            require: function (x) { return path.resolve(x); }
+            require: function (x) {
+                if (!file) return path.resolve(x);
+                var r = path.relative(filedir, x);
+                return /^\./.test(r) ? r : './' + r;
+            }
         });
         stream.push(walk(res));
         stream.push(null);

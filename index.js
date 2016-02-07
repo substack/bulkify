@@ -14,7 +14,7 @@ module.exports = function (file, opts) {
     
     var sm = staticModule(
         { 'bulk-require': bulkRequire },
-        { vars: vars }
+        { vars: vars, varModules: { path: path } }
     );
     return sm;
     

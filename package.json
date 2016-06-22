@@ -4,7 +4,7 @@
   "description": "transform inline bulk-require calls into statically resolvable require maps",
   "main": "index.js",
   "dependencies": {
-    "bulk-require": "~0.2.0",
+    "bulk-require": "^1.0.0",
     "static-module": "^1.1.2",
     "through2": "~0.4.1"
   },

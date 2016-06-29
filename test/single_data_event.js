@@ -5,7 +5,6 @@ var bulk = require('../');
 var bulkRequire = require('bulk-require');
 var vm = require('vm');
 var concat = require('concat-stream');
-var devnull = require('dev-null')
 
 var dir = path.join(__dirname + '/glob');
 var args = [ 'data/**/*.js', 'render/*.js' ];

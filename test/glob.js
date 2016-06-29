@@ -11,8 +11,8 @@ var expected = bulkRequire(dir, args);
 
 test('glob', function (t) {
     t.plan(1);
-    
-    var b = bulk();
+
+    var b = bulk('');
     b.pipe(concat(function (body) {
         vm.runInNewContext(body, {
             console: { log: log },
@@ -24,7 +24,7 @@ test('glob', function (t) {
         + '))'
     );
     b.end();
-    
+
     function log (sections) {
         t.deepEqual(sections, expected);
     }

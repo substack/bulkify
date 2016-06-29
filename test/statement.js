@@ -11,8 +11,8 @@ var expected = bulkRequire(dir, args);
 
 test('statement', function (t) {
     t.plan(1);
-    
-    var b = bulk();
+
+    var b = bulk('');
     b.pipe(concat(function (body) {
         vm.runInNewContext(body, { require: require, t: t });
     }));
@@ -21,7 +21,7 @@ test('statement', function (t) {
         + ');\nt.ok(true)'
     );
     b.end();
-    
+
     function log (sections) {
         t.deepEqual(sections, expected);
     }

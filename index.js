@@ -2,6 +2,7 @@ var staticModule = require('static-module');
 var path = require('path');
 var through = require('through2');
 var bulk = require('bulk-require');
+var concat = require('concat-stream')
 
 module.exports = function (file, opts) {
     if (/\.json$/.test(file)) return through();
@@ -16,7 +17,13 @@ module.exports = function (file, opts) {
         { 'bulk-require': bulkRequire },
         { vars: vars, varModules: { path: path } }
     );
-    return sm;
+    return through(function (buf, enc, next) {
+        sm.write(buf)
+        sm.end()
+        sm.pipe(concat(function (output) {
+            next(null, output)
+        }))
+    })
 
     function bulkRequire (dir, globs, opts) {
         var stream = through();

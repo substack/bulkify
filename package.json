@@ -5,11 +5,11 @@
   "main": "index.js",
   "dependencies": {
     "bulk-require": "^1.0.0",
+    "concat-stream": "^1.4.5",
     "static-module": "^1.1.2",
     "through2": "~0.4.1"
   },
   "devDependencies": {
-    "concat-stream": "^1.4.5",
     "tape": "^2.12.1"
   },
   "scripts": {

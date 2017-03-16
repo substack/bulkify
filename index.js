@@ -30,8 +30,8 @@ module.exports = function (file, opts) {
         var res = bulk(dir, globs, {
             index: opts && opts.index,
             require: function (x) {
-                if (!file) return path.resolve(x);
-                var r = path.relative(filedir, x);
+                if (!file) return path.resolve(x).replace(/\\/g, '/');
+                var r = path.relative(filedir, x).replace(/\\/g, '/');
                 return /^\./.test(r) ? r : './' + r;
             }
         });
